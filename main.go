@@ -6,7 +6,9 @@ import (
 	"os"
 )
 
+// References for anyone wanting to help!
 // https://gobyexample.com/command-line-flags
+//https://shapeshed.com/unix-exit-codes/
 
 func main() {
 	md5flag := flag.Bool("md5", false, "Returns a md5 hash.")
@@ -20,31 +22,25 @@ func main() {
 
 	flag.Parse()
 
-	// Check for multiple hashtypes and lack of flags
-	hashtypeflaglist := 0
-	if *md5flag {
-		hashtypeflaglist++
-	}
-	if *sha1flag {
-		hashtypeflaglist++
-	}
-	if *sha256flag {
-		hashtypeflaglist++
-	}
-	if *sha512flag {
-		hashtypeflaglist++
-	}
-
-	if hashtypeflaglist > 1 {
-		fmt.Println("Please use only 1 hashtype flag.")
-		os.Exit(1) //https://shapeshed.com/unix-exit-codes/
+	// Huge thanks to "bereal" on StackOverflow!
+	// https://stackoverflow.com/a/69963331/17029825
+	flags := []*bool{md5flag, sha1flag, sha256flag, sha512flag}
+	seenSetFlag := false
+	for _, f := range flags {
+		if *f {
+			if seenSetFlag {
+				fmt.Println("Please only use one hash-type flag.")
+				os.Exit(1)
+			}
+			seenSetFlag = true
+		}
 	}
 
-	if hashtypeflaglist == 0 {
-		fmt.Println("Please provide one hashtype flag and one (or multiple) argument(s). All flags can be listed with the -h flag.")
+	if *stringflag == "" {
+		fmt.Println("Please input a valid string. Example: ./Hashy -md5 -string e")
+		os.Exit(1)
 	}
-
-	// TODO: Update the switcher
+	// TODO: Update the function switcher
 	if *verboseflag {
 
 		if *md5flag {
