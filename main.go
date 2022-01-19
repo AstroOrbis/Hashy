@@ -40,43 +40,6 @@ func main() {
 		fmt.Println("Please input a valid string. Example: ./Hashy -md5 -string e")
 		os.Exit(1)
 	}
-	// TODO: Update the function switcher
-	if *verboseflag {
 
-		if *md5flag {
-			fmt.Println(verboseMD5encrypt(*stringflag))
-		}
-
-		if *sha1flag {
-			fmt.Println(verboseSHA1encrypt(*stringflag))
-		}
-
-		if *sha256flag {
-			fmt.Println(verboseSHA256encrypt(*stringflag))
-		}
-
-		if *sha512flag {
-			fmt.Println(verboseSHA512encrypt(*stringflag))
-		}
-
-	} else {
-
-		if *md5flag {
-			fmt.Println(MD5encrypt(*stringflag))
-		}
-
-		if *sha1flag {
-			fmt.Println(SHA1encrypt(*stringflag))
-		}
-
-		if *sha256flag {
-			fmt.Println(SHA256encrypt(*stringflag))
-		}
-
-		if *sha512flag {
-			fmt.Println(SHA512encrypt(*stringflag))
-		}
-
-	}
-
+	fmt.Println(switcher(*md5flag, *sha1flag, *sha256flag, *sha512flag, *verboseflag, *stringflag))
 }
