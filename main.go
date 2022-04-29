@@ -4,42 +4,50 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 )
 
 // References for anyone wanting to help!
 // https://gobyexample.com/command-line-flags
-//https://shapeshed.com/unix-exit-codes/
+// https://shapeshed.com/unix-exit-codes/
 
 func main() {
-	md5flag := flag.Bool("md5", false, "Returns a md5 hash.")
-	sha1flag := flag.Bool("sha1", false, "Returns a sha1 hash.")
-	sha256flag := flag.Bool("sha256", false, "Returns a sha256 hash.")
-	sha512flag := flag.Bool("sha512", false, "Returns a sha512 hash.")
-	verboseflag := flag.Bool("v", false, "Returns verbose output.")
-
-	stringflag := flag.String("string", "", "Hashes the given string.")
-	// StrArg := strings.Join(flag.Args(), " ")
+	hashTypeFlag := flag.String("hash", "", "Hash flag")
+	verboseFlag := flag.Bool("v", false, "Returns verbose output.")
+	hashFlag := flag.String("string", "", "Hashes the given string.")
 
 	flag.Parse()
 
-	// Huge thanks to "bereal" on StackOverflow!
-	// https://stackoverflow.com/a/69963331/17029825
-	flags := []*bool{md5flag, sha1flag, sha256flag, sha512flag}
-	seenSetFlag := false
-	for _, f := range flags {
-		if *f {
-			if seenSetFlag {
-				fmt.Println("Please only use one hash-type flag.")
-				os.Exit(1)
-			}
-			seenSetFlag = true
-		}
-	}
-
-	if *stringflag == "" {
-		fmt.Println("Please input a valid string. Example: ./Hashy -md5 -string e")
+	if len(os.Args) < 2 {
+		fmt.Println("Please input a valid string. \nExample: ./Hashy -hash md5 -string e")
 		os.Exit(1)
 	}
 
-	fmt.Println(switcher(*md5flag, *sha1flag, *sha256flag, *sha512flag, *verboseflag, *stringflag))
+	if len(*hashFlag) < 0 {
+		fmt.Println("No string specified to hash. \nUse the -string parameter to specify a string to hash")
+		os.Exit(1)
+	}
+
+	hashType := *hashTypeFlag
+	compiledHash := ""
+
+	// Supported hash types: md5, sha1, sha256, sha512
+	switch strings.ToLower(hashType) {
+	case "md5":
+		compiledHash = MD5hash(*hashFlag)
+	case "sha1":
+		compiledHash = SHA1hash(*hashFlag)
+	case "sha256":
+		compiledHash = SHA256hash(*hashFlag)
+	case "sha512":
+		compiledHash = SHA512hash(*hashFlag)
+	default:
+		fmt.Println("Unspecified hash type: " + hashType + "\nPlease use either MD5, SHA1, SHA256, or SHA512")
+	}
+
+	if *verboseFlag {
+		fmt.Println(strings.ToUpper(hashType) + " hash for " + *hashFlag + ": " + compiledHash)
+	} else {
+		fmt.Println(compiledHash)
+	}
 }
