@@ -23,7 +23,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if len(*hashFlag) < 0 {
+	if len(*hashFlag) < 1 {
 		fmt.Println("No string specified to hash. \nUse the -string parameter to specify a string to hash")
 		os.Exit(1)
 	}
