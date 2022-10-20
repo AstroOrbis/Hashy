@@ -12,9 +12,17 @@ import (
 // https://shapeshed.com/unix-exit-codes/
 
 func main() {
-	hashTypeFlag := flag.String("hash", "", "Hash flag")
+	hashTypeFlag := flag.String("hash", "", "Hash algorithm to use. Available algorithms: md5, sha1, sha256, sha512")
 	verboseFlag := flag.Bool("v", false, "Returns verbose output.")
-	hashFlag := flag.String("string", "", "Hashes the given string.")
+	hashFlag := flag.String("string", "", "String to hash")
+
+	// change usage message to display the mandatory parameters
+	flag.Usage = func() {
+		_, _ = fmt.Fprintf(flag.CommandLine.Output(), "Usage: %s -hash <algorithm> -string <input> [-v]\n", os.Args[0])
+		flag.PrintDefaults()
+		_, _ = fmt.Fprintf(flag.CommandLine.Output(), "\nExample: %s -hash md5 -string e\n", os.Args[0])
+
+	}
 
 	flag.Parse()
 
