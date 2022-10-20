@@ -26,7 +26,7 @@ func main() {
 
 	flag.Parse()
 
-	if len(*hashTypeFlag) == 0 || len(*hashFlag) == 0 {
+	if *hashTypeFlag == "" || *hashFlag == "" {
 		_, _ = fmt.Fprintf(flag.CommandLine.Output(), "The flags -hash and -string are required\n\n")
 		flag.Usage()
 		os.Exit(1)
